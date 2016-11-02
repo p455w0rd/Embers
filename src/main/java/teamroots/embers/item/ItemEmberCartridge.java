@@ -133,36 +133,42 @@ public class ItemEmberCartridge extends ItemBase implements IHeldEmberCell, IEmb
 
 	@Override
 	public double addAmount(ItemStack stack, double value, boolean doAdd) {
-		double ember = stack.getTagCompound().getDouble(Embers.MODID+":ember");
-		double capacity = stack.getTagCompound().getDouble(Embers.MODID+":emberCapacity");
-		if (ember+value > capacity){
-			double added = capacity-ember;
-			if (doAdd){
-				setEmber(stack,capacity);
-				ember = capacity;
+		if (stack.hasTagCompound()) {
+			double ember = stack.getTagCompound().getDouble(Embers.MODID+":ember");
+			double capacity = stack.getTagCompound().getDouble(Embers.MODID+":emberCapacity");
+			if (ember+value > capacity){
+				double added = capacity-ember;
+				if (doAdd){
+					setEmber(stack,capacity);
+					ember = capacity;
+				}
+				return added;
 			}
-			return added;
+			if (doAdd){
+				setEmber(stack,ember+value);
+			}
+			return value;
 		}
-		if (doAdd){
-			setEmber(stack,ember+value);
-		}
-		return value;
+		return 0D;
 	}
 
 	@Override
 	public double removeAmount(ItemStack stack, double value, boolean doRemove) {
-		double ember = stack.getTagCompound().getDouble(Embers.MODID+":ember");
-		double capacity = stack.getTagCompound().getDouble(Embers.MODID+":emberCapacity");
-		if (ember-value < 0){
-			double removed = ember;
-			if (doRemove){
-				setEmber(stack,0);
+		if (stack.hasTagCompound()) {
+			double ember = stack.getTagCompound().getDouble(Embers.MODID+":ember");
+			double capacity = stack.getTagCompound().getDouble(Embers.MODID+":emberCapacity");
+			if (ember-value < 0){
+				double removed = ember;
+				if (doRemove){
+					setEmber(stack,0);
+				}
+				return removed;
 			}
-			return removed;
+			if (doRemove){
+				setEmber(stack, ember-value);
+			}
+			return value;
 		}
-		if (doRemove){
-			setEmber(stack, ember-value);
-		}
-		return value;
+		return 0D;
 	}
 }
